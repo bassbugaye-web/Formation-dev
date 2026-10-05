@@ -17,12 +17,26 @@ let panier = [];
 
 let boutons = document.querySelectorAll(".btn-ajouter");
 
+let compteur = document.querySelector("#compteur");
+let panierAffiche = document.querySelector("#panier-affiche");
+
 for (let i = 0; i < boutons.length; i++) {
   boutons[i].addEventListener("click", function () {
     let index = this.getAttribute("data-index");
     let produit = catalogue[index];
     panier.push(produit);
-    console.log("Ajouté au panier : " + produit.nom);
-    console.log("Panier actuel :", panier);
+
+    compteur.textContent = panier.length;
+    panierAffiche.innerHTML = "";
+for (let j = 0; j < panier.length; j++) {
+  panierAffiche.innerHTML += "<p>" + panier[j].nom + " - " + panier[j].prix + " FCFA</p>";
+}
+
+let total = 0;
+for (let j = 0; j < panier.length; j++) {
+  total = total + panier[j].prix;
+}
+panierAffiche.innerHTML += "<p><strong>Total : " + total + " FCFA</strong></p>";
+
   });
 }
