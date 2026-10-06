@@ -6,37 +6,45 @@ let catalogue = [
   { nom: "Lait de corps", prix: 4400, stock: 2 }
 ];
 
-let conteneur = document.querySelector("#catalogue");
-
-
-for (let i = 0; i < catalogue.length; i++) {
-  conteneur.innerHTML += "<div class='produit'><strong>" + catalogue[i].nom + "</strong><br>" + catalogue[i].prix + " FCFA<br>Stock : " + catalogue[i].stock + "<br><button class='btn-ajouter' data-index='" + i + "'>Ajouter au panier</button></div>";
-}
-
 let panier = [];
 
-let boutons = document.querySelectorAll(".btn-ajouter");
-
+let conteneur = document.querySelector("#catalogue");
 let compteur = document.querySelector("#compteur");
 let panierAffiche = document.querySelector("#panier-affiche");
 
-for (let i = 0; i < boutons.length; i++) {
-  boutons[i].addEventListener("click", function () {
-    let index = this.getAttribute("data-index");
-    let produit = catalogue[index];
-    panier.push(produit);
-
-    compteur.textContent = panier.length;
-    panierAffiche.innerHTML = "";
-for (let j = 0; j < panier.length; j++) {
-  panierAffiche.innerHTML += "<p>" + panier[j].nom + " - " + panier[j].prix + " FCFA</p>";
+function afficherCatalogue() {
+  conteneur.innerHTML = "";
+  for (let i = 0; i < catalogue.length; i++) {
+    conteneur.innerHTML += "<div class='produit'><strong>" + catalogue[i].nom + "</strong><br>" + catalogue[i].prix + " FCFA<br>Stock : " + catalogue[i].stock + "<br><button class='btn-ajouter' data-index='" + i + "'>Ajouter au panier</button></div>";
+  }
 }
 
-let total = 0;
-for (let j = 0; j < panier.length; j++) {
-  total = total + panier[j].prix;
+function afficherPanier() {
+  compteur.textContent = panier.length;
+  panierAffiche.innerHTML = "";
+  let total = 0;
+  for (let j = 0; j < panier.length; j++) {
+    panierAffiche.innerHTML += "<p>" + panier[j].nom + " - " + panier[j].prix + " FCFA <button class='btn-retirer' data-position='" + j + "'>Retirer</button></p>";
+    total = total + panier[j].prix;
+  }
+  panierAffiche.innerHTML += "<p><strong>Total : " + total + " FCFA</strong></p>";
 }
-panierAffiche.innerHTML += "<p><strong>Total : " + total + " FCFA</strong></p>";
 
-  });
-}
+afficherCatalogue();
+afficherPanier();
+
+conteneur.addEventListener("click", function (e) {
+  if (e.target.classList.contains("btn-ajouter")) {
+    let index = e.target.getAttribute("data-index");
+    panier.push(catalogue[index]);
+    afficherPanier();
+  }
+});
+
+panierAffiche.addEventListener("click", function (e) {
+  if (e.target.classList.contains("btn-retirer")) {
+    let position = e.target.getAttribute("data-position");
+    panier.splice(position, 1);
+    afficherPanier();
+  }
+});
